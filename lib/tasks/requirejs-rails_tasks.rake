@@ -146,6 +146,10 @@ EOM
 end
 
 task "assets:precompile" => ["requirejs:precompile:external"]
+task "assets:environment" do
+  # This makes sure asset paths can be calculated for fonts and images in CSS files
+  Rails.application.config.assets.compile = true
+end
 if ARGV[0] == "requirejs:precompile:all"
   task "assets:environment" => ["requirejs:precompile:disable_js_compressor"]
 end
