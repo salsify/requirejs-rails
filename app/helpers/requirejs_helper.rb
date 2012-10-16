@@ -38,6 +38,7 @@ module RequirejsHelper
           run_config[:priority] ||= []
           run_config[:priority].concat _priority
         end
+	run_config.delete "base_url"
         if Rails.application.config.assets.digest
           modules = requirejs.build_config['modules'].map { |m| requirejs.module_name_for m }
 
