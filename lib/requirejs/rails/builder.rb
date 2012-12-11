@@ -16,7 +16,6 @@ module Requirejs::Rails
     end
 
     def digest_for(path)
-      Rails.logger.info("Calculating digest for #{path}")
       Rails.application.assets.file_digest(path).hexdigest
     end
 
