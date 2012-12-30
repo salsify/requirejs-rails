@@ -33,6 +33,9 @@ module RequirejsHelper
     _once_guard do
       unless requirejs.run_config.empty?
         run_config = requirejs.run_config.dup
+        unless Rails.env.production?
+          run_config[:urlArgs] = "_bust=#{rand}"
+        end
         unless _priority.empty?
           run_config = run_config.dup
           run_config[:priority] ||= []
