@@ -16,14 +16,14 @@ module Requirejs
         # a single top-level hash, keys/values corresponding to require.js
         # config parameters.
         config.requirejs.user_config_file = Pathname.new(app.paths["config"].first)+'requirejs.yml'
+      end
+
+      config.before_initialize do |app|
         if config.requirejs.user_config_file.exist?
           config.requirejs.user_config = YAML.load(ERB.new(config.requirejs.user_config_file.read).result)
         else
           config.requirejs.user_config = {}
         end
-      end
-
-      config.before_initialize do |app|
         config = app.config
         config.assets.precompile += config.requirejs.precompile
 
