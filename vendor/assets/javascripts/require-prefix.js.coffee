@@ -23,4 +23,4 @@ while length--
   console[method] = noop unless console[method]
 
 className = doc.documentElement.className
-doc.documentElement.className = className.replace(/\bno-js\b/g, '')
+doc.documentElement.className = className.replace(/\bno-js\b/g, 'js')
