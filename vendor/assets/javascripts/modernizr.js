@@ -1,5 +1,5 @@
 /* Modernizr 2.6.2 (Custom Build) | MIT & BSD
- * Build: http://modernizr.com/download/#-history-audio-video-localstorage-cssclasses-cssclassprefix:mz!
+ * Build: http://modernizr.com/download/#-history-audio-video-localstorage-cssclasses-cssclassprefix:m!
  */
 ;
 
@@ -202,7 +202,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
          test = typeof test == 'function' ? test() : test;
 
-         docElement.className+=" mz-" + (test ? '' : 'no-') + feature;
+         docElement.className+=" m-" + (test ? '' : 'no-') + feature;
          Modernizr[feature] = test;
 
        }
@@ -217,7 +217,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     Modernizr._version      = version;
 
-    docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, '$1$2') + " mz-js mz-"+classes.join(" mz-");
+    docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, '$1$2') + " m-js m-"+classes.join(" m-");
 
     return Modernizr;
 
