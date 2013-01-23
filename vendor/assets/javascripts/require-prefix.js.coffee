@@ -1,3 +1,4 @@
+#= require modernizr
 # Avoid being trapped inside a frame
 doc = document
 blankOutPage = -> doc.body.innerHTML = ""
@@ -21,6 +22,3 @@ console = (window.console = window.console || {})
 while length--
   method = methods[length]
   console[method] = noop unless console[method]
-
-className = doc.documentElement.className
-doc.documentElement.className = className.replace(/\bno-js\b/g, 'js')
