@@ -20,11 +20,12 @@ var module_specs = [
 <% end %>
 ];
 
-
+// Error handler invoked in case requirejs compilation fails
 var errback = function(error) {
   process.stderr.write(error.toString());
   process.exit(1);
 }
+
 // Do a series of builds of individual files, using the args suggested by:
 // http://requirejs.org/docs/optimization.html#onejs
 //
