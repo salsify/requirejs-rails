@@ -22,6 +22,7 @@ module Requirejs::Rails
       self.rjs_path   = self.bin_dir+'r.js'
 
       self.loader = :requirejs
+      self.bootstrap_file = 'require.js'
 
       self.driver_template_path = Pathname.new(__FILE__+'/../rjs_driver.js.erb').cleanpath
       self.driver_path = self.tmp_dir + 'rjs_driver.js'
