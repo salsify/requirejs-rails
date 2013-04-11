@@ -58,7 +58,7 @@ module RequirejsHelper
           run_config['paths'] = paths
         end
 
-        run_config['baseUrl'] = baseUrl(name)
+        # run_config['baseUrl'] = baseUrl(name)
         html.concat <<-HTML
         <script>var require = #{run_config.to_json};</script>
         HTML
@@ -98,7 +98,7 @@ module RequirejsHelper
   def baseUrl(js_asset)
     js_asset_path = javascript_path(js_asset)
     uri = URI.parse(js_asset_path)
-    asset_host = uri.host && js_asset_path.sub(uri.request_uri, '')
+    asset_host = uri.host && js_asset_path.sub(uri.path, '')
     [asset_host, Rails.application.config.assets.prefix].join
   end
 end
