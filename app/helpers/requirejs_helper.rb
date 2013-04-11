@@ -31,7 +31,7 @@ module RequirejsHelper
       return _almond_include_tag(name, &block)
     end
 
-    html = ""
+    html = ActiveSupport::SafeBuffer.new
 
     _once_guard do
       unless requirejs.run_config.empty?
@@ -59,16 +59,11 @@ module RequirejsHelper
         end
 
         run_config['baseUrl'] = baseUrl(name)
-        html.concat <<-HTML
-        <script>var require = #{run_config.to_json};</script>
-        HTML
+        html.safe_concat %Q|<script>var require = #{run_config.to_json};#{requirejs.bootstrap_config}</script>\n|
       end
 
-      html.concat <<-HTML
-      <script #{_requirejs_data(name, &block)} src="#{_javascript_path requirejs.bootstrap_file}"></script>
-      HTML
-
-      html.html_safe
+      html.safe_concat %Q|<script #{_requirejs_data(name, &block)} src="#{_javascript_path requirejs.bootstrap_file}"></script>|
+      html
     end
   end
 
