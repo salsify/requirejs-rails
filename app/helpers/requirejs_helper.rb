@@ -62,7 +62,7 @@ module RequirejsHelper
         html.safe_concat %Q|<script>var require = #{run_config.to_json};#{requirejs.bootstrap_config}</script>\n|
       end
 
-      html.safe_concat %Q|<script #{_requirejs_data(name, &block)} src="#{_javascript_path requirejs.bootstrap_file}"></script>|
+      html.safe_concat %Q|<script #{_requirejs_data(name, &block)} src="#{_javascript_path requirejs.bootstrap_file}" data-turbolinks-track></script>|
       html
     end
   end
