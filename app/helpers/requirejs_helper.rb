@@ -23,7 +23,7 @@ module RequirejsHelper
     end.join(" ")
   end
 
-  def requirejs_include_tag(name=nil, &block)
+  def requirejs_include_tag(name = nil, options = {}, &block)
     requirejs = Rails.application.config.requirejs
 
     if requirejs.loader == :almond
@@ -31,39 +31,43 @@ module RequirejsHelper
       return _almond_include_tag(name, &block)
     end
 
-    html = ActiveSupport::SafeBuffer.new
-
     _once_guard do
-      unless requirejs.run_config.empty?
-        run_config = requirejs.run_config.dup
-        unless _priority.empty?
-          run_config = run_config.dup
-          run_config[:priority] ||= []
-          run_config[:priority].concat _priority
-        end
-        if Rails.application.config.assets.digest
-          modules = requirejs.build_config['modules'].map { |m| requirejs.module_name_for m }
-
-          # Generate digestified paths from the modules spec
-          paths = {}
-          modules.each { |m| paths[m] = _javascript_path(m).sub /\.js$/,'' }
-
-          if run_config.has_key? 'paths'
-            # Add paths for assets specified by full URL (on a CDN)
-            run_config['paths'].each { |k,v| paths[k] = v if v =~ /^https?:/ }
-          end
-
-          # Override user paths, whose mappings are only relevant in dev mode
-          # and in the build_config.
-          run_config['paths'] = paths
-        end
-
-        run_config['baseUrl'] = baseUrl(name)
-        html.safe_concat %Q|<script>var require = #{run_config.to_json};#{requirejs.bootstrap_config}</script>\n|
-      end
-
+      html = ActiveSupport::SafeBuffer.new
+      html.safe_concat "<script>#{requirejs_config_js(name)}</script>\n" unless options[:skip_config]
       html.safe_concat %Q|<script #{_requirejs_data(name, &block)} src="#{_javascript_path requirejs.bootstrap_file}" data-turbolinks-track></script>|
       html
+    end
+  end
+
+  def requirejs_config_js(name = nil)
+    requirejs = Rails.application.config.requirejs
+
+    unless requirejs.run_config.empty?
+      run_config = requirejs.run_config.dup
+      unless _priority.empty?
+        run_config = run_config.dup
+        run_config[:priority] ||= []
+        run_config[:priority].concat _priority
+      end
+      if Rails.application.config.assets.digest
+        modules = requirejs.build_config['modules'].map { |m| requirejs.module_name_for m }
+
+        # Generate digestified paths from the modules spec
+        paths = {}
+        modules.each { |m| paths[m] = _javascript_path(m).sub /\.js$/,'' }
+
+        if run_config.has_key? 'paths'
+          # Add paths for assets specified by full URL (on a CDN)
+          run_config['paths'].each { |k,v| paths[k] = v if v =~ /^https?:/ }
+        end
+
+        # Override user paths, whose mappings are only relevant in dev mode
+        # and in the build_config.
+        run_config['paths'] = paths
+      end
+
+      run_config['baseUrl'] = baseUrl(name)
+      "var require = #{run_config.to_json};".html_safe
     end
   end
 
