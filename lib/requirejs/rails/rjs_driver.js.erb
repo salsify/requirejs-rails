@@ -5,9 +5,9 @@ var requirejs = require('<%= rjs_path %>'),
   basConfig = <%= JSON.pretty_generate(build_config.reject {|k,v| k == 'modules'}) %>;
 
 basConfig.onBuildWrite = function(id, path, contents) {
-  if ((/\(function\(\)\{define\(/).test(contents)) {
+  if ((/\!?\(function\(\)\{define\(/).test(contents)) {
     // Remove Coffeescript wrapper
-    contents = contents.replace(/\(function\(\)\{(define\(.+?)\}\)\.call\(this\);/, '$1');
+    contents = contents.replace(/\!?\(function\(\)\{(define\(.+?)\}\)\.call\(this\);/, '$1');
   }
   return contents;
 }

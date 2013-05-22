@@ -39,7 +39,7 @@ module RequirejsHelper
     end
   end
 
-  def requirejs_config_js(name = nil)
+  def requirejs_config_js(name = nil, config_data = {})
     requirejs = Rails.application.config.requirejs
 
     unless requirejs.run_config.empty?
@@ -65,6 +65,8 @@ module RequirejsHelper
         # and in the build_config.
         run_config['paths'] = paths
       end
+      run_config['config'] ||= {}
+      run_config['config'].merge! config_data
 
       run_config['baseUrl'] = baseUrl(name)
       "var require = #{run_config.to_json};".html_safe
