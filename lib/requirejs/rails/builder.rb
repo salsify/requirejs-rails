@@ -16,9 +16,11 @@ module Requirejs::Rails
     end
 
     def digest_for(path)
-      Rails.application.assets.file_digest(path).hexdigest
-    rescue StandardError => e
-      raise ArgumentError, "digest_for(#{path}) failed with #{e.class}: #{e.message}\n#{e.backtrace[0..4].join("\n")}"
+      if !Rails.application.assets.file_digest(path).nil?
+        Rails.application.assets.file_digest(path).hexdigest
+      else
+        raise Requirejs::BuildError, "Cannot compute digest for missing asset: #{path}\n#{e.class}: #{e.message}\n#{e.backtrace[0..4].join("\n")}"
+      end
     end
 
     def generate_rjs_driver

@@ -64,7 +64,7 @@ EOM
   end
 
   namespace :precompile do
-    task :all => ["requirejs:precompile:prepare_source",
+    task :primary => ["requirejs:precompile:prepare_source",
                   "requirejs:precompile:generate_rjs_driver",
                   "requirejs:precompile:run_rjs",
                   "requirejs:precompile:digestify_and_compress"]
@@ -82,7 +82,7 @@ EOM
     # We depend on test_node here so we'll fail early and hard if node
     # isn't available.
     task :external => ["requirejs:test_node"] do
-      ruby_rake_task "requirejs:precompile:all"
+      ruby_rake_task "requirejs:precompile:primary"
     end
 
     # copy all assets to tmp/assets
@@ -119,7 +119,6 @@ EOM
       requirejs.config.build_config['modules'].each do |m|
         asset_name = "#{requirejs.config.module_name_for(m)}.js"
         built_asset_path = requirejs.config.target_dir + asset_name
-        #built_asset_path = Rails.application.assets.find_asset(asset_name).pathname
         digest_name = asset_name.sub(/\.(\w+)$/) { |ext| "-#{requirejs.builder.digest_for(built_asset_path)}#{ext}" }
         digest_asset_path = requirejs.config.target_dir + digest_name
         requirejs.manifest[asset_name] = digest_name
@@ -132,6 +131,7 @@ EOM
           zgw.close
         end
         FileUtils.cp "#{built_asset_path}.gz", "#{digest_asset_path}.gz"
+        FileUtils.rm [built_asset_path, "#{built_asset_path}.gz"]
 
         requirejs.config.manifest_path.open('wb') do |f|
           YAML.dump(requirejs.manifest,f)
@@ -142,15 +142,11 @@ EOM
 
   desc "Precompile RequireJS-managed assets"
   task :precompile do
-    invoke_or_reboot_rake_task "requirejs:precompile:all"
+    invoke_or_reboot_rake_task "requirejs:precompile:primary"
   end
 end
 
-task "assets:precompile" => ["requirejs:precompile:external"]
-task "assets:environment" do
-  # This makes sure asset paths can be calculated for fonts and images in CSS files
-  Rails.application.config.assets.compile = true
-end
-if ARGV[0] == "requirejs:precompile:all"
+task "assets:precompile:primary" => ["requirejs:precompile:external"]
+if ARGV[0] == "requirejs:precompile:primary"
   task "assets:environment" => ["requirejs:precompile:disable_js_compressor"]
 end

@@ -22,6 +22,7 @@ module Requirejs::Rails
       self.rjs_path   = self.bin_dir+'r.js'
 
       self.loader = :requirejs
+      self.bootstrap_file = 'require.js'
 
       self.driver_template_path = Pathname.new(__FILE__+'/../rjs_driver.js.erb').cleanpath
       self.driver_path = self.tmp_dir + 'rjs_driver.js'
@@ -83,6 +84,7 @@ module Requirejs::Rails
         skipModuleInsertion
         skipPragmas
         uglify
+        uglify2
         useStrict
         wrap
       }
@@ -101,7 +103,7 @@ module Requirejs::Rails
                                                     "modules" => [ { 'name' => 'application' } ]
         self[:build_config].merge!(self.user_config).slice!(*self.build_config_whitelist)
         case self.loader
-        when :requirejs 
+        when :requirejs
           # nothing to do
         when :almond
           mods = self[:build_config]['modules']
