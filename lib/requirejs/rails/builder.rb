@@ -6,17 +6,16 @@ require 'ostruct'
 module Requirejs::Rails
   class Builder
     # config should be an instance of Requirejs::Rails::Config
-
+    
     def initialize(config)
       @config = config
     end
-
-    def build
+    
+    def build      
       @config.tmp_dir
     end
 
     def digest_for(path)
-      Rails.logger.debug("Calculating digest for #{path}")
       Rails.application.assets.file_digest(path).hexdigest
     end
 
