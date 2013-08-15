@@ -6,12 +6,12 @@ require 'ostruct'
 module Requirejs::Rails
   class Builder
     # config should be an instance of Requirejs::Rails::Config
-    
+
     def initialize(config)
       @config = config
     end
-    
-    def build      
+
+    def build
       @config.tmp_dir
     end
 
@@ -19,7 +19,7 @@ module Requirejs::Rails
       if !Rails.application.assets.file_digest(path).nil?
         Rails.application.assets.file_digest(path).hexdigest
       else
-        raise Requirejs::BuildError, "Cannot compute digest for missing asset: #{path}"
+        raise Requirejs::BuildError, "Cannot compute digest for missing asset: #{path}\n#{e.class}: #{e.message}\n#{e.backtrace[0..4].join("\n")}"
       end
     end
 

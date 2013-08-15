@@ -4,6 +4,18 @@ var requirejs = require('<%= rjs_path %>'),
   //common to all the optimize() calls.
   basConfig = <%= JSON.pretty_generate(build_config.reject {|k,v| k == 'modules'}) %>;
 
+basConfig.onBuildWrite = function(id, path, contents) {
+  if ((/\(function\(\)\{define\(/).test(contents)) {
+    // Remove Coffeescript wrapper
+    contents = contents.replace(/\(function\(\)\{(define\(.+?)\}\)\.call\(this\);/, '$1');
+  }
+  if ((/!function\(\)\{define\(/).test(contents)) {
+    // Remove Coffeescript wrapper
+    contents = contents.replace(/!function\(\)\{(define\(.+?)\}\.call\(this\);/, '$1');
+  }
+  return contents;
+}
+
 // Function used to mix in baseConfig to a new config target
 function mix(target) {
   for (var prop in basConfig) {
@@ -29,11 +41,10 @@ var errback = function(error) {
 // Do a series of builds of individual files, using the args suggested by:
 // http://requirejs.org/docs/optimization.html#onejs
 //
-// r.js will eventually need a nested call idiom to handle async 
+// r.js will eventually need a nested call idiom to handle async
 // builds.  Anticipating that need.
 var async_runner = module_specs.reduceRight(function(prev, curr) {
-  return function (buildReportText) { 
-    requirejs.optimize(mix(curr), prev);
+  return function (buildReportText) {
     requirejs.optimize(mix(curr), prev, errback);
   };
 }, function(buildReportText) {} );
