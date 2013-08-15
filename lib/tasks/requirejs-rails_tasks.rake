@@ -9,10 +9,6 @@ require 'tempfile'
 
 require 'active_support/ordered_options'
 
-def ruby_rake_task(task)
-  Rake::Task[task].invoke
-end
-
 namespace :requirejs do
 
   # From Rails 3 assets.rake; we have the same problem:
