@@ -57,6 +57,7 @@ module Requirejs::Rails
         dir
         fileExclusionRegExp
         findNestedDependencies
+        generateSourceMaps
         has
         hasOnSave
         include
@@ -83,6 +84,7 @@ module Requirejs::Rails
         skipModuleInsertion
         skipPragmas
         uglify
+        uglify2
         useStrict
         wrap
       }
