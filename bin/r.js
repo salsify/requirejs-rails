@@ -23403,14 +23403,21 @@ function (lang,   logger,   envOptimize,        file,           parse,
                     if (uconfig.outSourceMap && result.map) {
                         resultMap = result.map;
                         if (existingMap) {
+                            var mapStart = Date.now();
                             resultMap = JSON.parse(resultMap);
+                            console.log("Parsed resultMap (" + (Date.now() - mapStart) + " ms)"); mapStart = Date.now();
                             finalMap = SourceMapGenerator.fromSourceMap(new SourceMapConsumer(resultMap));
+                            console.log("Built finalMap (" + (Date.now() - mapStart) + " ms)"); mapStart = Date.now();
                             finalMap.applySourceMap(new SourceMapConsumer(existingMap));
+                            console.log("Applied existing map (" + (Date.now() - mapStart) + " ms)"); mapStart = Date.now();
                             resultMap = finalMap.toString();
+                            console.log("Completed resultMap (" + (Date.now() - mapStart) + " ms)"); mapStart = Date.now();
                         } else {
                             file.saveFile(outFileName + '.src.js', fileContents);
                         }
+                        mapStart = Date.now();
                         file.saveFile(outFileName + '.map', resultMap);
+                        console.log("Wrote map (" + (Date.now() - mapStart) + " ms)"); mapStart = Date.now();
                         fileContents = result.code + "\n//# sourceMappingURL=" + baseName + ".map";
                     } else {
                         fileContents = result.code;
