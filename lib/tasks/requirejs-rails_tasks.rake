@@ -107,7 +107,6 @@ EOM
                       "requirejs:test_node"] do
       requirejs.config.target_dir.mkpath
 
-      puts `npm install memwatch`
       start = Time.now
       puts `node "#{requirejs.config.driver_path}"`
       puts "Node ran in #{Time.now - start} ms"

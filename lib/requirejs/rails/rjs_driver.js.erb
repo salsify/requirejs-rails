@@ -1,5 +1,5 @@
 //Load the requirejs optimizer
-var requirejs = require('<%= rjs_path %>'), memwatch = require('memwatch'),
+var requirejs = require('<%= rjs_path %>'), util = require('util'),
   //Set up basic config, include config that is
   //common to all the optimize() calls.
   basConfig = <%= JSON.pretty_generate(build_config.reject {|k,v| k == 'modules'}) %>;
@@ -30,15 +30,13 @@ var async_runner = module_specs.reduceRight(function(prev, curr) {
   return function (buildReportText) {
     requirejs.optimize(mix(curr), function() {
       console.log("good");
-      memwatch.gc();
+      console.log(util.inspect(process.memoryUsage()));
     }, function() {
       console.log("bad");
-      memwatch.gc();
+      console.log(util.inspect(process.memoryUsage()));
     });
   };
 }, function(buildReportText) {} );
 
-memwatch.on('stats', function(stats) {
-  console.log(JSON.stringify(stats, null, 2));
-});
+console.log(util.inspect(process.memoryUsage()));
 async_runner();
