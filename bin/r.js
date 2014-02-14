@@ -21024,6 +21024,8 @@ exports.minify = function(files, options, name) {
 
     UglifyJS.base54.reset();
 
+    var start = Date.now();
+
     // 1. parse
     var toplevel = null;
     files.forEach(function(file){
@@ -21036,6 +21038,8 @@ exports.minify = function(files, options, name) {
         });
     });
 
+    console.log("Spent " + (Date.now() - start) + " ms parsing.");
+
     // 2. compress
     if (options.compress) {
         var compress = { warnings: options.warnings };
@@ -21045,12 +21049,16 @@ exports.minify = function(files, options, name) {
         toplevel = toplevel.transform(sq);
     }
 
+    console.log("Spent " + (Date.now() - start) + " ms compressing.");
+
     // 3. mangle
     if (options.mangle) {
         toplevel.figure_out_scope();
         toplevel.compute_char_frequency();
         toplevel.mangle_names(options.mangle);
     }
+
+    console.log("Spent " + (Date.now() - start) + " ms mangling.");
 
     // 4. output
     var inMap = options.inSourceMap;
@@ -21070,6 +21078,9 @@ exports.minify = function(files, options, name) {
     }
     var stream = UglifyJS.OutputStream(output);
     toplevel.print(stream);
+
+    console.log("Spent " + (Date.now() - start) + " ms writing.");
+
     return {
         code : stream + "",
         map  : output.source_map + ""
@@ -23385,7 +23396,10 @@ function (lang,   logger,   envOptimize,        file,           parse,
 
                 try {
                     //var tempContents = fileContents.replace(/\/\/\# sourceMappingURL=.*$/, '');
+                    var start = Date.now();
+                    console.log("Starting uglify");
                     result = uglify2.minify(fileContents, uconfig, baseName + '.src.js');
+                    console.log("Uglify terminated (" + (Date.now() - start) + " ms)");
                     if (uconfig.outSourceMap && result.map) {
                         resultMap = result.map;
                         if (existingMap) {
@@ -23404,6 +23418,7 @@ function (lang,   logger,   envOptimize,        file,           parse,
                 } catch (e) {
                     throw new Error('Cannot uglify2 file: ' + fileName + '. Skipping it. Error is:\n' + e.toString());
                 }
+                console.log("Returning after " + (Date.now() - start) + " ms.");
                 return fileContents;
             }
         }
