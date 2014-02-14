@@ -24220,7 +24220,7 @@ define('build', function (require) {
             buildFileContents = "",
             pluginCollector = {};
 
-        return prim().start(function () {
+        return prim().start(function () { console.log(Date.now() + ": starting build._run");
             var prop;
 
             //Can now run the patches to require.js to allow it to be used for
@@ -24362,9 +24362,9 @@ define('build', function (require) {
             if (config.optimizeCss && config.optimizeCss !== "none" && config.dir) {
                 buildFileContents += optimize.css(config.dir, config);
             }
-        }).then(function() {
+        }).then(function() { console.log(Date.now() + ": lang.deeplikeCopy");
             baseConfig = lang.deeplikeCopy(require.s.contexts._.config);
-        }).then(function () {
+        }).then(function () { console.log(Date.now() + ": building buildPath index");
             var actions = [];
 
             if (modules) {
@@ -24384,7 +24384,7 @@ define('build', function (require) {
 
                 return prim.serial(actions);
             }
-        }).then(function () {
+        }).then(function () { console.log(Date.now() + ": building shadow layers");
             var actions;
 
             if (modules) {
@@ -24416,7 +24416,7 @@ define('build', function (require) {
 
                 return prim.serial(actions);
             }
-        }).then(function () {
+        }).then(function () { console.log(Date.now() + ": collecting build output");
             if (modules) {
                 return prim.serial(modules.map(function (module) {
                     return function () {
@@ -24469,7 +24469,7 @@ define('build', function (require) {
                     };
                 }));
             }
-        }).then(function () {
+        }).then(function () { console.log(Date.now() + ": moving into final position");
             var moduleName;
             if (modules) {
                 //Now move the build layers to their final position.
@@ -24514,7 +24514,7 @@ define('build', function (require) {
             if (config.removeCombined && !config.out && config.dir) {
                 file.deleteEmptyDirs(config.dir);
             }
-
+console.log(Date.now() + ": starting optimization");
             //Do other optimizations.
             if (config.out && !config.cssIn) {
                 //Just need to worry about one JS file.
@@ -24667,7 +24667,7 @@ define('build', function (require) {
                 //All module layers are done, write out the build.txt file.
                 file.saveUtf8File(config.dir + "build.txt", buildFileContents);
             }
-
+console.log(Date.now() + ": done with optimization");
             //If just have one CSS file to optimize, do that here.
             if (config.cssIn) {
                 buildFileContents += optimize.cssFile(config.cssIn, config.out, config).buildText;
