@@ -18,7 +18,7 @@ module Requirejs::Rails
       self.bin_dir = Pathname.new(__FILE__+'/../../../../bin').cleanpath
 
       self.source_dir = self.tmp_dir + 'assets'
-      self.target_dir = Rails.root + "public#{Rails.configuration.assets.prefix}"
+      self.target_dir = nil
       self.rjs_path   = self.bin_dir+'r.js'
 
       self.loader = :requirejs
