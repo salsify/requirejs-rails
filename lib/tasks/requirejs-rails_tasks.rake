@@ -82,7 +82,7 @@ EOM
     # We depend on test_node here so we'll fail early and hard if node
     # isn't available.
     task :external => ["requirejs:test_node"] do
-      invoke_or_reboot_rake_task("requirejs:precompile:all")
+      ruby_rake_task "requirejs:precompile:all"
     end
 
     # copy all assets to tmp/assets
