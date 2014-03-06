@@ -62,7 +62,6 @@ module Requirejs::Rails
         hasOnSave
         include
         inlineText
-        keepBuildDir
         locale
         mainConfigFile
         map
