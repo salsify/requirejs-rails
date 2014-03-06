@@ -59,8 +59,11 @@ module RequirejsHelper
         HTML
       end
 
+      crossorigin = requirejs.run_config["crossorigin"]
+
       html.concat <<-HTML
-      <script #{_requirejs_data(name, &block)} src="#{_javascript_path 'require.js'}" crossorigin="anonymous"></script>
+      <script #{_requirejs_data(name, &block)} #{_crossorigin_attribute(crossorigin)} src="#{_javascript_path 'require.js'}"></script>
+      #{_crossorigin_override(crossorigin)}
       HTML
 
       html.html_safe
@@ -76,6 +79,27 @@ module RequirejsHelper
 
     controller.requirejs_included = true if defined?(controller)
     retval
+  end
+
+  def _crossorigin_attribute(crossorigin)
+    "crossorigin=\"#{crossorigin}\"" unless crossorigin.nil?
+  end
+
+  # See https://github.com/jrburke/requirejs/issues/687
+  def _crossorigin_override(crossorigin)
+    return if crossorigin.nil?
+
+    <<-HTML
+    <script>
+      (function(createNode) {
+        requirejs.createNode = function() {
+          var node = createNode.apply(this, arguments);
+          node.crossOrigin = "#{crossorigin}";
+          return node;
+        };
+      })(requirejs.createNode);
+    </script>
+    HTML
   end
 
   def _almond_include_tag(name, &block)
