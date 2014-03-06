@@ -60,7 +60,7 @@ module RequirejsHelper
       end
 
       html.concat <<-HTML
-      <script #{_requirejs_data(name, &block)} src="#{_javascript_path 'require.js'}"></script>
+      <script #{_requirejs_data(name, &block)} src="#{_javascript_path 'require.js'}" crossorigin="anonymous"></script>
       HTML
 
       html.html_safe
