@@ -34,6 +34,7 @@ module Requirejs::Rails
         catchError
         config
         context
+        crossorigin
         deps
         jQuery
         locale
